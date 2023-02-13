@@ -7,22 +7,25 @@
 <body>
 <h1>Portal del administrador</h1>
 <h1 th:insert= "fragmento.html" ></h1>
-<th:block th:each="usuario : ${listaUsuarios}">
-<p>
-  <span th:text="${usuario.getNif()}"></span>
-  <span th:text="${usuario.getNombre()}"></span>
-  <span th:text="${usuario.getApellidos()}"></span>
-  <ul>
-  <th:block th:each="tarea : ${usuario.getTareas()}">
-    <li>
-      <span th:text="${tarea.getNombre()}"></span>
-      <span> - </span>
-      <span th:text="${tarea.getDescripcion()}"></span>
-    </li>
-  </th:block>
-</ul>
-</p>
+<form th:action="@{/admin/usuario/editar}" method="post">
+
+  <th:block th:each="usuario : ${listaUsuarios}">
+    <p>
+      <input type="submit" th:value="${usuario.getNif()}" name="nif">
+      <span th:text="${usuario.getNombre()}"></span>
+      <span th:text="${usuario.getApellidos()}"></span>
+      <ul>
+        <th:block th:each="tarea : ${usuario.getTareas()}">
+          <li>
+            <span th:text="${tarea.getNombre()}"></span>
+            <span> - </span>
+            <span th:text="${tarea.getDescripcion()}"></span>
+          </li>
+        </th:block>
+      </ul>
+    </p>
 </th:block>
+</form>
 <p>
   <a th:href="@{/admin/usuario/nuevo}">Registrar un nuevo usuario</a>
 </p>
