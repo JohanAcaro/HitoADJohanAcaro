@@ -1,4 +1,5 @@
 CREATE DATABASE tareas;
+
 USE tareas;
 
 CREATE TABLE USUARIO (
