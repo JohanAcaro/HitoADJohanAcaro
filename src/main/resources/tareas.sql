@@ -1,12 +1,11 @@
-CREATE DATABASE tareas;
+CREATE DATABASE IF NOT EXISTS tareas DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
 USE tareas;
 
-DROP TABLE IF EXISTS `usuario`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 
-CREATE TABLE `usuario` (
+CREATE TABLE IF NOT EXISTS `usuario` (
     `NIF` char(9) NOT NULL,
     `NOMBRE` varchar(30) DEFAULT NULL,
     `APELLIDOS` varchar(50) DEFAULT NULL,
@@ -15,13 +14,11 @@ CREATE TABLE `usuario` (
     PRIMARY KEY (`NIF`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-DROP TABLE IF EXISTS `roles`;
-
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 
 /*!50503 SET character_set_client = utf8mb4 */;
 
-CREATE TABLE `roles` (
+CREATE TABLE IF NOT EXISTS `roles` (
     `id` int NOT NULL AUTO_INCREMENT,
     `nif` char(9) DEFAULT NULL,
     `ROL` varchar(50) NOT NULL,
@@ -31,13 +28,11 @@ CREATE TABLE `roles` (
 
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-DROP TABLE IF EXISTS `tarea`;
-
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 
 /*!50503 SET character_set_client = utf8mb4 */;
 
-CREATE TABLE `tarea` (
+CREATE TABLE IF NOT EXISTS `tarea` (
     `ID` int NOT NULL AUTO_INCREMENT,
     `NOMBRE` varchar(200) DEFAULT NULL,
     `DESCRIPCION` varchar(1000) DEFAULT NULL,
@@ -48,7 +43,6 @@ CREATE TABLE `tarea` (
     CONSTRAINT `tarea_ibfk_1` FOREIGN KEY (`NIF`) REFERENCES `usuario` (`NIF`)
 
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 
 INSERT INTO usuario
 values ('11111111A', 'Amelia', 'Lopez', '$2a$10$MOynvigRuUw3RX.1/1VkVeeXnIANlQMDpppV/6fPdfJp7WfMpREk2', 1);
