@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `tarea` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO usuario
-values ('11111111A', 'Amelia', 'Lopez', '$2a$10$MOynvigRuUw3RX.1/1VkVeeXnIANlQMDpppV/6fPdfJp7WfMpREk2', 1);
+values ('11111111A', 'Administrador', 'Amelia', '$2a$10$DbtQRnOscKHwrG8PKOUqee7j3u40wb8Y5Fu4kS5eMYKday3SPFCwa', 1);
 
 insert into ROLES (NIF, ROL)
   (SELECT NIF, 'ADMINISTRADOR' FROM USUARIO);

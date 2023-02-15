@@ -1,10 +1,12 @@
 package es.hitoadjohanacaro.jpa;
 
+import java.io.Serial;
 import java.io.Serializable;
 import jakarta.persistence.*;
 
 @Entity
 public class Tarea implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id

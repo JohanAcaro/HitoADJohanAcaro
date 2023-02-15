@@ -4,11 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
 public class Usuario implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
