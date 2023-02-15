@@ -4,12 +4,13 @@ package es.hitoadjohanacaro.control;
 
 import es.hitoadjohanacaro.jpa.Role;
 import es.hitoadjohanacaro.jpa.Usuario;
-import es.hitoadjohanacaro.servicios.RoleRepositorio;
 import es.hitoadjohanacaro.servicios.RoleService;
+import es.hitoadjohanacaro.servicios.TareaService;
 import es.hitoadjohanacaro.servicios.UsuarioService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ import java.util.Optional;
 public class Controlador {
 
     @Autowired
-    PasswordEncoder contrasenaEncriptada;
+    PasswordEncoder encoder;
 
     @Autowired
     UsuarioService usuarios;
@@ -30,20 +31,18 @@ public class Controlador {
     @Autowired
     RoleService roles;
 
+    @Autowired
+    TareaService tareas;
+
     @RequestMapping("/")
     public ModelAndView peticionRaiz(Authentication aut) {
         ModelAndView mv = new ModelAndView();
-        if (aut == null)
+        if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
         else
             mv.addObject("user", aut.getName());
 
-        String texto = "123";
-        String encriptado = contrasenaEncriptada.encode(texto);
-        System.out.println("Texto original: " + texto);
-        System.out.println("Texto emcriptado: " + encriptado);
-
-        mv.setViewName("index"); //TAmbién llamados endpoints
+        mv.setViewName("index"); //También llamados endpoints
         return mv;
     }
 
@@ -57,7 +56,7 @@ public class Controlador {
     @RequestMapping("denegado") // URL: http://localhost:8081/login
     public ModelAndView peticionDenegado(Authentication aut) { // Nombre del método: peticionSesion
         ModelAndView mv = new ModelAndView();
-        if (aut == null)
+        if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
         else
             mv.addObject("user", aut.getName());
@@ -68,13 +67,13 @@ public class Controlador {
     @RequestMapping("/user") // URL: http://localhost:8081/user
     public ModelAndView peticionUser(Authentication aut) { // Nombre del método: peticionUser
         ModelAndView mv = new ModelAndView(); // Objeto que contiene la vista y los datos
-        if (aut == null)
+        if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
         else
             mv.addObject("user", aut.getName());
 
         Optional<Usuario> userOptional = usuarios.buscarUsuario(aut.getName());
-        Usuario user = null;
+        Usuario user=null;
         if (userOptional.isPresent()) {
             user = userOptional.get();
         }
@@ -86,7 +85,7 @@ public class Controlador {
     @RequestMapping("/user/perfil") // URL: http://localhost:8081/usuario/perfil
     public ModelAndView peticionUPerfil(Authentication aut) { // Nombre del método: peticionUPerfil
         ModelAndView mv = new ModelAndView();
-        if (aut == null)
+        if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
         else
             mv.addObject("user", aut.getName());
@@ -97,18 +96,17 @@ public class Controlador {
     @RequestMapping("/user/tareas/nueva")
     public ModelAndView peticioNuevaTarea(Authentication aut) {
         ModelAndView mv = new ModelAndView();
-        if (aut == null)
+        if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
         else
             mv.addObject("user", aut.getName());
         mv.setViewName("nuevatarea");
         return mv;
     }
-
     @RequestMapping("/user/tareas/listado")
     public ModelAndView peticioListdoTareas(Authentication aut) {
         ModelAndView mv = new ModelAndView();
-        if (aut == null)
+        if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
         else
             mv.addObject("user", aut.getName());
@@ -119,7 +117,7 @@ public class Controlador {
     @RequestMapping("/admin") // URL: http://localhost:8081/admin
     public ModelAndView peticionAdmin(Authentication aut) { // Nombre del método: peticionAdmin
         ModelAndView mv = new ModelAndView();
-        if (aut == null)
+        if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
         else
             mv.addObject("user", aut.getName());
@@ -139,30 +137,23 @@ public class Controlador {
     }
 
     @RequestMapping("/guardar")
-    public ModelAndView peticionGuardar(Usuario u, Authentication aut) {
+    public ModelAndView guardarUsuario(Usuario usuario, Authentication aut) {
         ModelAndView mv = new ModelAndView();
-        System.out.println(u);
+        System.out.println(usuario);
 
-        String sincifrar = u.getPw();
-        String encriptado = contrasenaEncriptada.encode(sincifrar);
-        u.setPw(encriptado);
+        String sinCodificar = usuario.getPw();
+        String codificado = encoder.encode(sinCodificar);
+        usuario.setPw(codificado);
 
-        if (aut == null)
-            mv.addObject("user", "No se ha iniciado sesión");
-        else
-            mv.addObject("user", aut.getName());
-
-
-        Optional<Usuario> usuarioBuscado = usuarios.buscarUsuario(u.getNif());
-        if (usuarioBuscado.isPresent()) {
-            mv.addObject("sms", "El nif " + u.getNif() + " ya está registrado");
+        if (aut==null) {
+            mv.addObject("El nif " +usuario.getNif() +"ya existe");
         } else {
-            usuarios.guardarUsuario(u);
-            Role rol = new Role();
-            rol.setUsuario(u);
-            rol.setRol("USUARIO");
-            roles.guardarRole(rol);
-            mv.addObject("sms", "Usuario " + u.getNombre() + " registrado correctamente");
+            usuarios.guardarUsuario(usuario);
+            Role role = new Role();
+            role.setUsuario(usuario);
+            role.setRol("usuario");
+            roles.guardarRole(role);
+            mv.addObject("El usuario con el nif:" +usuario.getNif() +" y el nombre: "+usuario.getNombre() +"se ha guardado correctamente");
         }
         mv.setViewName("informa");
         return mv;
@@ -171,18 +162,17 @@ public class Controlador {
     @RequestMapping("/admin/dashboard")
     public ModelAndView peticioDashboard(Authentication aut) {
         ModelAndView mv = new ModelAndView();
-        if (aut == null)
+        if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
         else
             mv.addObject("user", aut.getName());
         mv.setViewName("dashboard");
         return mv;
     }
-
     @RequestMapping("/admin/usuario/mostrar")
     public ModelAndView peticioUsuariosMostrar(Authentication aut) {
         ModelAndView mv = new ModelAndView();
-        if (aut == null)
+        if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
         else
             mv.addObject("user", aut.getName());
@@ -192,22 +182,25 @@ public class Controlador {
 
     @RequestMapping("/admin/usuario/editar")
     public ModelAndView peticioUsuariosEditar(Authentication aut, HttpServletRequest request) {
-
         String nif = request.getParameter("nif");
         Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
-        Usuario usuario = usuarioOpt.get();
+        Usuario user = usuarioOpt.get();
+
         ModelAndView mv = new ModelAndView();
-        if (aut == null)
+        if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
         else
-            mv.addObject("usuario", usuario);
+            mv.addObject("user", aut.getName());
+        mv.addObject("usuario", user);
         mv.setViewName("editarusuario");
         return mv;
     }
 
     @RequestMapping("/actualizar")
     public String peticionActualizar(Usuario u, Authentication aut) {
+
         usuarios.guardarUsuario(u);
+
         return "redirect:/admin";
     }
 }

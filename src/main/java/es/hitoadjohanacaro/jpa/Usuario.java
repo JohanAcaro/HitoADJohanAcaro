@@ -31,11 +31,11 @@ public class Usuario implements Serializable {
     private List<Tarea> tareas;
 
     public Usuario() {
-        this.nif="";
-        this.nombre="";
-        this.apellidos="";
-        this.pw="";
-        this.activo=1;
+        this.nif = "";
+        this.nombre = "";
+        this.apellidos = "";
+        this.pw = "";
+        this.activo = 1;
     }
 
     public String getNif() {
@@ -132,5 +132,4 @@ public class Usuario implements Serializable {
                 ", pw='" + pw + '\'' +
                 '}';
     }
-
 }

@@ -1,43 +1,41 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Edicion Usuario</title>
+  <title>Gestor de tareas: Registro de nuevo usuario</title>
 </head>
 <body>
-  <h1 th:insert= "fragmento.html" ></h1>
-  <h1>Edición del usuario con NIF:
-      <span th:text="${usuario.getNif()}"></span>
-  </h1>
-  <a class="btn btn-primary" th:href="@{/logout}">Cerrar sesión</a>
-
-  <form th:action="@{/actualizar}" th:object="${usuario}" method="post">
-    <fieldset><legend>Edición de un usuario: </legend>
-      <table>
-        <tr>
-          <td><label>NIF: </label></td>
-          <td><input type="text" th:field="*{nif}" /></td>
-        </tr>
-        <tr>
-          <td><label>Nombre: </label></td>
-          <td><input type="text" th:field="*{nombre}" /></td>
-        </tr>
-        <tr>
-          <td><label>Apellidos: </label></td>
-          <td><input type="text" th:field="*{apellidos}" /></td>
-        </tr>
-        <tr>
-          <td><label>Estado (1=Activo, 0=Inactivo): </label></td>
-          <td><input type="text" th:field="*{activo}" /></td>
-        </tr>
-        <tr>
-          <td>
-            <button type="submit">Actualizar usuario</button>
-          </td>
-        </tr>
-      </table>
-    </fieldset>
-  </form>
-  <h2><a th:href="@{/}">Home page</a></h2>
-
+<form th:action="@{/actualizar}" th:object="${usuario}" method="post">
+  <fieldset><legend>Edición de los datos del usuario: </legend>
+    <table>
+      <tr>
+        <td><label>NIF: </label></td>
+        <td><input type="text" readonly th:field="*{nif}" /></td>
+      </tr>
+      <tr>
+        <td><label>Nombre: </label></td>
+        <td><input type="text" th:field="*{nombre}" /></td>
+      </tr>
+      <tr>
+      <tr>
+        <td><label>Contraseña: </label></td>
+        <td><input type="hidden" th:field="*{pw}" /></td>
+      </tr>
+      <tr>
+        <td><label>Apellidos: </label></td>
+        <td><input type="text" th:field="*{apellidos}" /></td>
+      </tr>
+      <tr>
+        <td><label>Estado(1 = Activo, 0 = Inactivo): </label></td>
+        <td><input type="number" min="0" max="1" th:field="*{activo}" /></td>
+      </tr>
+      <tr>
+        <td>
+          <button type="submit">Guardar nuevo usuario</button>
+        </td>
+      </tr>
+    </table>
+  </fieldset>
+</form>
+<h2><a th:href="@{/}">Home page</a></h2>
 </body>
 </html>

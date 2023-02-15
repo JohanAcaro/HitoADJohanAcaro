@@ -16,10 +16,12 @@ public class UsuarioService {
     private UsuarioRepositorio usuarios;
 
     public UsuarioService(UsuarioRepositorio usuarios) {
+
         this.usuarios = usuarios;
     }
 
     public List<Usuario> listaUsuarios() {
+
         return usuarios.findAll();
     }
 
@@ -30,8 +32,8 @@ public class UsuarioService {
 
 
     public void guardarUsuario(Usuario user) {
+
         usuarios.save(user);
     }
-
 
 }

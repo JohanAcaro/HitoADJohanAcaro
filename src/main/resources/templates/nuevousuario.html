@@ -1,8 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Gestor de recomendaciones: Registro de nuevo usuario</title>
-    <link rel="stylesheet" th:href="@{/css/estilo.css}">
+    <title>Gestor de tareas: Registro de nuevo usuario</title>
 </head>
 <body>
 <form th:action="@{/guardar}" th:object="${usuario}" method="post">
@@ -25,8 +24,8 @@
                 <td><input type="password" th:field="*{pw}" /></td>
             </tr>
             <tr>
-                <td><label>Estado (1=Activo, 0=Inactivo): </label></td>
-                <td><input type="text" th:field="*{activo}" /></td>
+                <td><label>Estado(1 = Activo, 0 = Inactivo): </label></td>
+                <td><input type="number" min="0" max="1" th:field="*{activo}" /></td>
             </tr>
             <tr>
                 <td>

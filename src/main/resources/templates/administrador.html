@@ -7,11 +7,11 @@
 <body>
 <h1>Portal del administrador</h1>
 <h1 th:insert= "fragmento.html" ></h1>
-<form th:action="@{/admin/usuario/editar}" method="post">
+<form th:action="@{/admin/usuario/editar}" method="get">
 
   <th:block th:each="usuario : ${listaUsuarios}">
     <p>
-      <input type="submit" th:value="${usuario.getNif()}" name="nif">
+      <span th:text="${usuario.getNif()}"></span>
       <span th:text="${usuario.getNombre()}"></span>
       <span th:text="${usuario.getApellidos()}"></span>
       <ul>
@@ -24,7 +24,9 @@
         </th:block>
       </ul>
     </p>
+    <button type="submit"  name="nif" th:value="${usuario.getNif()}">Editar</button>
 </th:block>
+
 </form>
 <p>
   <a th:href="@{/admin/usuario/nuevo}">Registrar un nuevo usuario</a>
