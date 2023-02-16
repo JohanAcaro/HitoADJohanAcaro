@@ -2,6 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Gestor de tareas: Registro de nuevo usuario</title>
+  <!-- Enlace a los archivos CSS de Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
 </head>
 <body>
 <form th:action="@{/actualizar}" th:object="${usuario}" method="post">
@@ -17,12 +21,12 @@
       </tr>
       <tr>
       <tr>
-        <td><label>Contraseña: </label></td>
-        <td><input type="hidden" th:field="*{pw}" /></td>
-      </tr>
-      <tr>
         <td><label>Apellidos: </label></td>
         <td><input type="text" th:field="*{apellidos}" /></td>
+      </tr>
+      <tr>
+        <td><label>Contraseña: </label></td>
+        <td><input type="hidden" th:field="*{pw}" /></td>
       </tr>
       <tr>
         <td><label>Estado(1 = Activo, 0 = Inactivo): </label></td>
@@ -30,12 +34,16 @@
       </tr>
       <tr>
         <td>
-          <button type="submit">Guardar nuevo usuario</button>
+          <button type="submit">Editar usuario</button>
         </td>
       </tr>
     </table>
   </fieldset>
 </form>
 <h2><a th:href="@{/}">Home page</a></h2>
+<!-- Enlace a los archivos JavaScript de Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </body>
 </html>

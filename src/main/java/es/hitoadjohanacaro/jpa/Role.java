@@ -47,4 +47,5 @@ public class Role implements Serializable {
         this.usuario = usuario;
     }
 
+
 }

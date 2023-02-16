@@ -3,10 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <!-- Enlace a los archivos CSS de Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
 </head>
 <body>
-<h1>Esta es la vista perfil.html</h1>
-<h1 th:insert= "fragmento.html" ></h1>
-<a class="btn btn-primary" th:href="@{/logout}">Cerrar sesión</a>
+    <h1>Perfil del usuario</h1>
+    <h1 th:insert= "fragmento.html" ></h1>
+    <th:block th:object="${usuario}">
+        <p><span th:text="*{nif}"></span></p>
+        <p><span th:text="*{nombre}"></span></p>
+        <p><span th:text="*{apellidos}"></span></p>
+        <p><span th:text="*{pw}"></span></p>
+        <p><span th:text="*{activo}"></span></p>
+        <p><a th:href="@{/admin/usuario/editar(nif=${usuario.getNif()})}">Editar</a></p>
+        <p><a th:href="@{/admin/usuario/eliminar(nif=${usuario.getNif()})}">Eliminar</a></p>
+    </th:block>
+
+
+
+
+
+
+    <h2><a th:href="@{/}">Home page</a></h2>
+
+    <!-- Enlace a los archivos JavaScript de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </body>
 </html>

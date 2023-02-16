@@ -98,7 +98,6 @@ public class Usuario implements Serializable {
     public Role removeRole(Role role) {
         getRoles().remove(role);
         role.setUsuario(null);
-
         return role;
     }
 

@@ -3,33 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
+  <!-- Enlace a los archivos CSS de Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
 </head>
 <body>
-<h1>Portal del administrador</h1>
-<h1 th:insert= "fragmento.html" ></h1>
-<form th:action="@{/admin/usuario/editar}" method="get">
+  <h1>Portal del administrador</h1>
+  <h1 th:insert= "fragmento.html" ></h1>
+  <form th:action="@{/admin/usuario/editar}" method="get">
 
-  <th:block th:each="usuario : ${listaUsuarios}">
-    <p>
-      <span th:text="${usuario.getNif()}"></span>
-      <span th:text="${usuario.getNombre()}"></span>
-      <span th:text="${usuario.getApellidos()}"></span>
-      <ul>
-        <th:block th:each="tarea : ${usuario.getTareas()}">
-          <li>
-            <span th:text="${tarea.getNombre()}"></span>
-            <span> - </span>
-            <span th:text="${tarea.getDescripcion()}"></span>
-          </li>
-        </th:block>
-      </ul>
-    </p>
-    <button type="submit"  name="nif" th:value="${usuario.getNif()}">Editar</button>
-</th:block>
+    <th:block th:each="usuario : ${listaUsuarios}">
+      <p>
+        <span th:text="${usuario.getNif()}"></span>
+        <span th:text="${usuario.getNombre()}"></span>
+        <span th:text="${usuario.getApellidos()}"></span>
+        <ul>
+          <th:block th:each="tarea : ${usuario.getTareas()}">
+            <li>
+              <span th:text="${tarea.getNombre()}"></span>
+              <span> - </span>
+              <span th:text="${tarea.getDescripcion()}"></span>
+            </li>
+          </th:block>
+        </ul>
+        <button type="submit" class="warning"  name="nif" th:value="${usuario.getNif()}">Editar</button>
+        <a th:href="@{/admin/usuario/eliminar(nif=${usuario.getNif()})}">Eliminar</a>
+      </p>
+    </th:block>
+  </form>
 
-</form>
-<p>
-  <a th:href="@{/admin/usuario/nuevo}">Registrar un nuevo usuario</a>
-</p>
+  <p>
+    <a th:href="@{/admin/usuario/nuevo}">Registrar un nuevo usuario</a>
+  </p>
+  <h2><a th:href="@{/}">Home page</a></h2>
+
+  <!-- Enlace a los archivos JavaScript de Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 </body>
 </html>

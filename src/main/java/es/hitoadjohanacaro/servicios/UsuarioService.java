@@ -32,8 +32,11 @@ public class UsuarioService {
 
 
     public void guardarUsuario(Usuario user) {
-
         usuarios.save(user);
+    }
+
+    public void eliminarUsuario(Usuario user){
+        usuarios.delete(user);
     }
 
 }

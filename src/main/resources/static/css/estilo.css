@@ -1,1 +1,23 @@
+h1 {
+    color: blue;
+    font-size: 28px;
+    text-align: center;
+}
 
+p {
+    text-align: center;
+}
+
+a {
+    color: green;
+    text-decoration: none;
+    margin: 10px;
+    padding: 5px;
+    border: 2px solid green;
+    border-radius: 5px;
+}
+
+a:hover {
+    background-color: green;
+    color: white;
+}

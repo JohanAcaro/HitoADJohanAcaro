@@ -3,6 +3,7 @@ package es.hitoadjohanacaro.control;
 
 
 import es.hitoadjohanacaro.jpa.Role;
+import es.hitoadjohanacaro.jpa.Tarea;
 import es.hitoadjohanacaro.jpa.Usuario;
 import es.hitoadjohanacaro.servicios.RoleService;
 import es.hitoadjohanacaro.servicios.TareaService;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -72,6 +74,7 @@ public class Controlador {
         else
             mv.addObject("user", aut.getName());
 
+        assert aut != null;
         Optional<Usuario> userOptional = usuarios.buscarUsuario(aut.getName());
         Usuario user=null;
         if (userOptional.isPresent()) {
@@ -87,14 +90,19 @@ public class Controlador {
         ModelAndView mv = new ModelAndView();
         if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
-        else
+        else{
             mv.addObject("user", aut.getName());
+            String nif = aut.getName();
+            Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            Usuario user = usuarioOpt.get();
+            mv.addObject("usuario", user);
+        }
         mv.setViewName("perfil"); // La rutra del archivo: src/main/resources/templates/usuario.html
         return mv;
     }
 
     @RequestMapping("/user/tareas/nueva")
-    public ModelAndView peticioNuevaTarea(Authentication aut) {
+    public ModelAndView peticionNuevaTarea(Authentication aut) {
         ModelAndView mv = new ModelAndView();
         if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
@@ -104,7 +112,7 @@ public class Controlador {
         return mv;
     }
     @RequestMapping("/user/tareas/listado")
-    public ModelAndView peticioListdoTareas(Authentication aut) {
+    public ModelAndView peticionListdoTareas(Authentication aut) {
         ModelAndView mv = new ModelAndView();
         if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
@@ -151,16 +159,18 @@ public class Controlador {
             usuarios.guardarUsuario(usuario);
             Role role = new Role();
             role.setUsuario(usuario);
-            role.setRol("usuario");
+            role.setRol("USUARIO");
             roles.guardarRole(role);
             mv.addObject("El usuario con el nif:" +usuario.getNif() +" y el nombre: "+usuario.getNombre() +"se ha guardado correctamente");
         }
+        assert aut != null;
+        mv.addObject("user", aut.getName());
         mv.setViewName("informa");
         return mv;
     }
 
     @RequestMapping("/admin/dashboard")
-    public ModelAndView peticioDashboard(Authentication aut) {
+    public ModelAndView peticionDashboard(Authentication aut) {
         ModelAndView mv = new ModelAndView();
         if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
@@ -170,7 +180,7 @@ public class Controlador {
         return mv;
     }
     @RequestMapping("/admin/usuario/mostrar")
-    public ModelAndView peticioUsuariosMostrar(Authentication aut) {
+    public ModelAndView peticionUsuariosMostrar(Authentication aut) {
         ModelAndView mv = new ModelAndView();
         if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
@@ -181,7 +191,7 @@ public class Controlador {
     }
 
     @RequestMapping("/admin/usuario/editar")
-    public ModelAndView peticioUsuariosEditar(Authentication aut, HttpServletRequest request) {
+    public ModelAndView peticionUsuariosEditar(Authentication aut, HttpServletRequest request) {
         String nif = request.getParameter("nif");
         Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
         Usuario user = usuarioOpt.get();
@@ -203,4 +213,32 @@ public class Controlador {
 
         return "redirect:/admin";
     }
+
+    @RequestMapping("admin/usuario/eliminar")
+    public ModelAndView peticionUsuariosEliminar(Authentication aut, HttpServletRequest request){
+        String nif = request.getParameter("nif");
+        Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+        ModelAndView mv = new ModelAndView();
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            List<Role> rol = usuario.getRoles();
+            // Eliminar el usuario y el rol de la base de datos
+            roles.borrarRole(rol.get(0));
+            usuarios.eliminarUsuario(usuario);
+            mv.setViewName("redirect:/admin");
+        }
+        else {
+            mv.addObject("sms", "No se ha podido eliminar el usuario");
+            mv.setViewName("informa");
+        }
+        return mv;
+    }
+
+
+
+
+
+
+
+
 }
