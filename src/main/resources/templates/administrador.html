@@ -30,7 +30,7 @@
           <td>
             <ul>
               <th:block th:each="tarea : ${usuario.getTareas()}">
-                <li th:text="${tarea.getNombre()} + ' - ' + ${tarea.getDescripcion()}"></li>
+                <li th:text="${tarea.getNombre()} + ' - ' + ${tarea.getDescripcion()} + ' - ' + ${tarea.getEstado()}"></li>
               </th:block>
             </ul>
           </td>
