@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @ApplicationScope
@@ -29,8 +30,16 @@ public class TareaService {
         return tareas.findByEstado(estado);
     }
 
+    public Double promedioTareas() {
+        return tareas.promedio();
+    }
+
     public void guardar(Tarea t){
         tareas.save(t);
+    }
+
+    public Optional<Tarea> buscarTarea(int id){
+        return tareas.findById(id);
     }
 
     public void borrar(Tarea t){

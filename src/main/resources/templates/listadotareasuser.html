@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body class="bg-light">
+<span th:insert= "navegador.html"></span>
+<h1>Listado de las Tareas</h1>
+<h1 th:insert= "fragmento.html" ></h1>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <a class="btn btn-primary" th:href="@{/admin/usuario/tareas/nueva(nif=${usuario.nif})}">Nueva Tarea</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Id</th>
+          <th>Nombre</th>
+          <th>Descripcion</th>
+          <th>Estado</th>
+          <th>Usuario</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tarea : ${tareas}">
+          <td th:text="${tarea.id}"></td>
+          <td th:text="${tarea.nombre}"></td>
+          <td th:text="${tarea.descripcion}"></td>
+          <td th:text="${tarea.estado}"></td>
+          <td th:text="${tarea.usuario.nif}"></td>
+          <td>
+            <a class="btn btn-warning" th:href="@{/admin/usuario/tareas/editar(nif=${usuario.nif}, id=${tarea.id})}">Editar</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

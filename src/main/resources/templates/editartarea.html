@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestor de tareas: Registro de nuevo usuario</title>
+</head>
+<body class="bg-light">
+<span th:insert= "navegador.html"></span>
+<div class="container mt-4">
+    <form th:action="@{/actualizar/tarea(nif=${usuario.nif})}" th:object="${tarea}" method="post">
+        <fieldset><legend>Edición de los datos de la tarea: </legend>
+            <table class="table table-bordered">
+                <tr>
+                    <td><label>ID: </label></td>
+                    <td><input type="text" readonly th:field="*{id}" required class="form-control"/></td>
+                </tr>
+                <tr>
+                    <td><label>Nombre: </label></td>
+                    <td><input type="text" th:field="*{nombre}" required class="form-control"/></td>
+                </tr>
+                <tr>
+                    <td><label>Descripción: </label></td>
+                    <td><input type="text" th:field="*{descripcion}" required class="form-control"/></td>
+                </tr>
+                <tr>
+                    <td><label>Estado(3 = Completada, 2 = Pendiente, 1 = Anulada): </label></td>
+                    <td><input type="number" th:field="*{estado}" required class="form-control"/></td>
+                </tr>
+                <tr>
+                    <td><label>NIF: </label></td>
+                    <td><input type="text" readonly th:field="*{usuario.nif}" required class="form-control"/></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit" class="btn btn-warning">Editar tarea</button>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+</div>
+
+</body>
+</html>
