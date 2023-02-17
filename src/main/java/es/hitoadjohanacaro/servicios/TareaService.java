@@ -29,6 +29,10 @@ public class TareaService {
         return tareas.findByEstado(estado);
     }
 
+    public void guardar(Tarea t){
+        tareas.save(t);
+    }
+
     public void borrar(Tarea t){
         tareas.delete(t);
     }

@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -101,26 +102,97 @@ public class Controlador {
         return mv;
     }
 
-    @RequestMapping("/user/tareas/nueva")
-    public ModelAndView peticionNuevaTarea(Authentication aut) {
+    @RequestMapping("/user/perfil/editar")
+    public ModelAndView peticionEditarPerfil(Authentication aut) {
         ModelAndView mv = new ModelAndView();
         if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
-        else
+        else{
             mv.addObject("user", aut.getName());
-        mv.setViewName("nuevatarea");
+            String nif = aut.getName();
+            Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            Usuario user = usuarioOpt.get();
+            mv.addObject("usuario", user);
+        }
+        mv.setViewName("editarusuario"); // La rutra del archivo: src/main/resources/templates/usuario.html
         return mv;
     }
+
+    @RequestMapping("/user/perfil/eliminar")
+    public ModelAndView peticionEliminarPerfil(Authentication aut) {
+        String nif = aut.getName();
+        Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+        ModelAndView mv = new ModelAndView();
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            List<Role> rol = usuario.getRoles();
+            // Eliminar el usuario y el rol de la base de datos
+            roles.borrarRole(rol.get(0));
+            usuarios.eliminarUsuario(usuario);
+            mv.addObject("sms", "Se ha eliminado el usuario correctamente");
+            mv.setViewName("informa");
+        }
+        else {
+            mv.addObject("sms", "No se ha podido eliminar el usuario");
+            mv.setViewName("informa");
+        }
+        return mv;
+    }
+
     @RequestMapping("/user/tareas/listado")
     public ModelAndView peticionListdoTareas(Authentication aut) {
         ModelAndView mv = new ModelAndView();
         if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
-        else
+        else{
             mv.addObject("user", aut.getName());
+            String nif = aut.getName();
+            Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            Usuario user = usuarioOpt.get();
+            List<Tarea> listaTareas = user.getTareas();
+            mv.addObject("tareas", listaTareas);
+        }
         mv.setViewName("listadotareas");
         return mv;
     }
+
+    @RequestMapping("/user/tareas/nueva")
+    public ModelAndView peticionNuevaTarea(Authentication aut) {
+        ModelAndView mv = new ModelAndView();
+        if(aut==null)
+            mv.addObject("user", "No se ha iniciado sesión");
+        else {
+            mv.addObject("user", aut.getName());
+            Tarea tarea = new Tarea();
+            mv.addObject("tarea", tarea);
+        }
+        mv.setViewName("nuevatarea");
+        return mv;
+    }
+
+    @RequestMapping("/guardar/tarea")
+    public ModelAndView guardarTarea(Tarea tarea, Authentication aut) {
+        ModelAndView mv = new ModelAndView();
+        if(aut==null)
+            mv.addObject("user", "No se ha iniciado sesión");
+        else {
+            mv.addObject("user", aut.getName());
+            String nif = aut.getName();
+            Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            Usuario user = usuarioOpt.get();
+            tarea.setUsuario(user);
+            tareas.guardar(tarea);
+            if (tarea.getNombre() != null) {
+                mv.setViewName("redirect:/user/tareas/listado");
+            } else {
+                mv.addObject("sms", "Se ha guardado la tarea correctamente");
+                mv.setViewName("informa");
+            }
+        }
+        return mv;
+    }
+
+
 
     @RequestMapping("/admin") // URL: http://localhost:8081/admin
     public ModelAndView peticionAdmin(Authentication aut) { // Nombre del método: peticionAdmin
@@ -161,11 +233,13 @@ public class Controlador {
             role.setUsuario(usuario);
             role.setRol("USUARIO");
             roles.guardarRole(role);
-            mv.addObject("El usuario con el nif:" +usuario.getNif() +" y el nombre: "+usuario.getNombre() +"se ha guardado correctamente");
+            if (usuario.getNif() == null) {
+                mv.addObject("sms", "No se ha podido guardar el usuario");
+            } else {
+                mv.addObject("El usuario con el nif:" +usuario.getNif() +" y el nombre: "+usuario.getNombre() +"se ha guardado correctamente");
+                mv.setViewName("redirect:/admin");
+            }
         }
-        assert aut != null;
-        mv.addObject("user", aut.getName());
-        mv.setViewName("informa");
         return mv;
     }
 
@@ -179,6 +253,7 @@ public class Controlador {
         mv.setViewName("dashboard");
         return mv;
     }
+
     @RequestMapping("/admin/usuario/mostrar")
     public ModelAndView peticionUsuariosMostrar(Authentication aut) {
         ModelAndView mv = new ModelAndView();
@@ -206,12 +281,24 @@ public class Controlador {
         return mv;
     }
 
+
     @RequestMapping("/actualizar")
     public String peticionActualizar(Usuario u, Authentication aut) {
 
+        String sinCodificar = u.getPw();
+        String codificado = encoder.encode(sinCodificar);
+        u.setPw(codificado);
+
         usuarios.guardarUsuario(u);
 
-        return "redirect:/admin";
+        // Si el usuario es admin, redirigir a la página de administrador
+        if (aut.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
+            return "redirect:/admin";
+        }
+        // Si el usuario es usuario, redirigir a la página de usuario
+        else {
+            return "redirect:/user";
+        }
     }
 
     @RequestMapping("admin/usuario/eliminar")
