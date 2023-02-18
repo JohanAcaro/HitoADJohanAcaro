@@ -75,14 +75,16 @@ public class Controlador {
         ModelAndView mv = new ModelAndView(); // Objeto que contiene la vista y los datos
         if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
-        else
+        else {
             mv.addObject("user", aut.getName());
-
-        assert aut != null;
-        Optional<Usuario> userOptional = usuarios.buscarUsuario(aut.getName());
-        Usuario user=null;
-        if (userOptional.isPresent()) {
-            user = userOptional.get();
+            // Recupero el usuario autenticado
+            String nif = aut.getName();
+            // Busco el usuario en la base de datos
+            Optional<Usuario> userOptional = usuarios.buscarUsuario(nif);
+            // Obtengo el usuario de la base de datos
+            Usuario user = userOptional.get();
+            // Añado el usuario a la vista
+            mv.addObject("usuario", user);
         }
 
         mv.setViewName("usuario"); // La rutra del archivo: src/main/resources/templates/user.html
@@ -96,9 +98,13 @@ public class Controlador {
             mv.addObject("user", "No se ha iniciado sesión");
         else{
             mv.addObject("user", aut.getName());
+            // Recupero el usuario autenticado
             String nif = aut.getName();
+            // Busco el usuario en la base de datos
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            // Obtengo el usuario de la base de datos
             Usuario user = usuarioOpt.get();
+            // Añado el usuario a la vista
             mv.addObject("usuario", user);
         }
         mv.setViewName("perfil"); // La rutra del archivo: src/main/resources/templates/usuario.html
@@ -112,9 +118,13 @@ public class Controlador {
             mv.addObject("user", "No se ha iniciado sesión");
         else{
             mv.addObject("user", aut.getName());
+            // Recupero el usuario autenticado
             String nif = aut.getName();
+            // Busco el usuario en la base de datos
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            // Obtengo el usuario de la base de datos
             Usuario user = usuarioOpt.get();
+            // Añado el usuario a la vista
             mv.addObject("usuario", user);
         }
         mv.setViewName("editarusuario"); // La rutra del archivo: src/main/resources/templates/usuario.html
@@ -126,8 +136,11 @@ public class Controlador {
         String nif = aut.getName();
         Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
         ModelAndView mv = new ModelAndView();
+        // Comprobar si el usuario existe
         if (usuarioOpt.isPresent()) {
+            // Obtener el usuario de la base de datos
             Usuario usuario = usuarioOpt.get();
+            // Obtener el rol del usuario
             List<Role> rol = usuario.getRoles();
             // Eliminar el el rol de la base de datos
             roles.borrarRole(rol.get(0));
@@ -138,6 +151,7 @@ public class Controlador {
             }
             // Eliminar el usuario de la base de datos
             usuarios.eliminarUsuario(usuario);
+            // Redirigir a la página de logout
             mv.setViewName("redirect:/logout");
         }
         else {
@@ -154,10 +168,15 @@ public class Controlador {
             mv.addObject("user", "No se ha iniciado sesión");
         else{
             mv.addObject("user", aut.getName());
+            // Recupero el nif del usuario autenticado
             String nif = aut.getName();
+            // Busco el usuario en la base de datos
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            // Recupero el usuario
             Usuario user = usuarioOpt.get();
+            // Asigno el usuario a la vista
             List<Tarea> listaTareas = user.getTareas();
+            // Asigno la lista de tareas a la vista
             mv.addObject("tareas", listaTareas);
         }
         mv.setViewName("listadotareas");
@@ -171,11 +190,17 @@ public class Controlador {
             mv.addObject("user", "No se ha iniciado sesión");
         else {
             mv.addObject("user", aut.getName());
+            // Recupero el nif del usuario autenticado
             String nif = aut.getName();
+            // Busco el usuario en la base de datos
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            // Recupero el usuario
             Usuario user = usuarioOpt.get();
+            // Asigno el usuario a la vista
             mv.addObject("usuario", user);
+            // Creo un objeto tarea
             Tarea tarea = new Tarea();
+            // Asigno el objeto tarea a la vista
             mv.addObject("tarea", tarea);
         }
         mv.setViewName("nuevatarea");
@@ -189,21 +214,31 @@ public class Controlador {
             mv.addObject("user", "No se ha iniciado sesión");
         else {
             mv.addObject("user", aut.getName());
+            // Recupero el nif del usuario elegido
             String nif = request.getParameter("nif");
+            // Busco el usuario en la base de datos
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            // Recupero el usuario
             Usuario user = usuarioOpt.get();
+            // Asigno el usuario a la tarea
             tarea.setUsuario(user);
+            // Guardo la tarea en la base de datos
             tareas.guardar(tarea);
             if (tarea.getNombre() != null) {
                 // Comprobar el rol del usuario para redirigirlo a la página correspondiente
                 String nifAut = aut.getName();
+                // Busco el usuario en la base de datos
                 Optional<Usuario> usuarioAutOpt = usuarios.buscarUsuario(nifAut);
+                // Recupero el usuario
                 Usuario userAut = usuarioAutOpt.get();
+                // Recupero el rol del usuario
                 List<Role> rol = userAut.getRoles();
                 if (rol.get(0).getRol().equals("ADMINISTRADOR")){
+                    // Redirigir a la página de listado de tareas del usuario elegido
                     mv.setViewName("redirect:/admin/usuario/tareas/listado?nif=" + nif);
                 }
                 else
+                    // Redirigir a la página de listado de tareas del usuario autenticado
                     mv.setViewName("redirect:/user/tareas/listado");
 
             } else {
@@ -221,15 +256,25 @@ public class Controlador {
             mv.addObject("user", "No se ha iniciado sesión");
         else {
             mv.addObject("user", aut.getName());
+            // Recupero el usuario autenticado
             String nif = aut.getName();
+            // Recupero el usuario de la base de datos
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            // Recupero la lista de tareas del usuario
             Usuario user = usuarioOpt.get();
+            // Recupero la lista de tareas del usuario
             List<Tarea> listaTareas = user.getTareas();
+            // Recupero la tarea elegida
             mv.addObject("tareas", listaTareas);
+            // Recupero el id de la tarea elegida
             int id = Integer.parseInt(request.getParameter("id"));
+            // Busco la tarea elegida
             Optional<Tarea> tareaOpt = tareas.buscarTarea(id);
+            // Recupero la tarea elegida
             Tarea tarea = tareaOpt.get();
+            // Asigno la tarea elegida a la vista
             mv.addObject("usuario", user);
+            // Asigno la tarea elegida a la vista
             mv.addObject("tarea", tarea);
         }
         mv.setViewName("editartarea");
@@ -243,22 +288,34 @@ public class Controlador {
             mv.addObject("user", "No se ha iniciado sesión");
         else {
             mv.addObject("user", aut.getName());
+            // Recupero el nif del usuario elegido
             String nif = request.getParameter("nif");
+            // Busco el usuario elegido
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            // Recupero el usuario elegido
             Usuario user = usuarioOpt.get();
+            // Asigno el usuario elegido a la tarea
             tarea.setUsuario(user);
+            // Actualizo la tarea
             tareas.guardar(tarea);
             if (tarea.getNombre() != null) {
-                // Comprobar el rol del usuario para redirigirlo a la página correspondiente
+                // Recupero el nif del usuario autenticado
                 String nifAut = aut.getName();
+                // Busco el usuario autenticado
                 Optional<Usuario> usuarioAutOpt = usuarios.buscarUsuario(nifAut);
+                // Recupero el usuario autenticado
                 Usuario userAut = usuarioAutOpt.get();
+                // Recupero el rol del usuario autenticado
                 List<Role> rol = userAut.getRoles();
+                // Comprobuebo el rol del usuario para redirigirlo a la página correspondiente
                 if (rol.get(0).getRol().equals("ADMINISTRADOR")){
+                    // Añado el nif del usuario al modelo
                     mv.addObject("nif", nif);
+                    // Redirijo a la página de listado de tareas del usuario
                     mv.setViewName("redirect:/admin/usuario/tareas/listado");
                 }
                 else
+                    // Redirijo a la página de listado de tareas del usuario
                     mv.setViewName("redirect:/user/tareas/listado");
 
             } else {
@@ -276,15 +333,25 @@ public class Controlador {
             mv.addObject("user", "No se ha iniciado sesión");
         else {
             mv.addObject("u ser", aut.getName());
+            // Recupero el usuario
             String nif = aut.getName();
+            // Creo un objeto Optional para recuperar el usuario
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            // Creo un objeto Usuario
             Usuario user = usuarioOpt.get();
+            // Recupero el listado de tareas del usuario
             List<Tarea> listaTareas = user.getTareas();
+            // Añado el listado de tareas al modelo
             mv.addObject("tareas", listaTareas);
+            // Recupero el id de la tarea a eliminar
             int id = Integer.parseInt(request.getParameter("id"));
+            // Creo un objeto Optional para recuperar la tarea
             Optional<Tarea> tareaOpt = tareas.buscarTarea(id);
+            // Creo un objeto Tarea
             Tarea tarea = tareaOpt.get();
+            // Elimino la tarea
             tareas.borrar(tarea);
+            // Redirijo a la página de listado de tareas
             mv.setViewName("redirect:/user/tareas/listado");
         }
         return mv;
@@ -299,7 +366,9 @@ public class Controlador {
             mv.addObject("user", "No se ha iniciado sesión");
         else
             mv.addObject("user", aut.getName());
+        // Listado de usuarios
         List<Usuario> listaUsuarios = usuarios.listaUsuarios();
+        // Añado el listado de usuarios al modelo
         mv.addObject("listaUsuarios", listaUsuarios);
         mv.setViewName("administrador");
         return mv;
@@ -318,22 +387,30 @@ public class Controlador {
     public ModelAndView guardarUsuario(Usuario usuario, Authentication aut) {
         ModelAndView mv = new ModelAndView();
         System.out.println(usuario);
-
+        // Recupero la contraseña del usuario sin codificar
         String sinCodificar = usuario.getPw();
+        // Codifico la contraseña
         String codificado = encoder.encode(sinCodificar);
+        // Asigno la contraseña codificada al usuario
         usuario.setPw(codificado);
 
         if (aut==null) {
             mv.addObject("El nif " +usuario.getNif() +"ya existe");
         } else {
+            // Guardo el usuario
             usuarios.guardarUsuario(usuario);
+            // Creo objeto Role
             Role role = new Role();
+            // Asigno el usuario al objeto Role
             role.setUsuario(usuario);
+            // Asigno el rol al objeto Role
             role.setRol("USUARIO");
+            // Guardo el objeto Role
             roles.guardarRole(role);
             if (usuario.getNif() == null) {
                 mv.addObject("sms", "No se ha podido guardar el usuario");
             } else {
+                // Redirijo a la página admin
                 mv.addObject("El usuario con el nif:" +usuario.getNif() +" y el nombre: "+usuario.getNombre() +"se ha guardado correctamente");
                 mv.setViewName("redirect:/admin");
             }
@@ -377,17 +454,6 @@ public class Controlador {
         return mv;
     }
 
-    @RequestMapping("/admin/usuario/mostrar") // URL: http://localhost:8083/admin/usuario/mostrar
-    public ModelAndView peticionUsuariosMostrar(Authentication aut) {
-        ModelAndView mv = new ModelAndView();
-        if(aut==null)
-            mv.addObject("user", "No se ha iniciado sesión");
-        else
-            mv.addObject("user", aut.getName());
-        mv.setViewName("mostrarusuarios");
-        return mv;
-    }
-
     @RequestMapping("/admin/usuario/editar") // URL: http://localhost:8083/admin/usuario/editar
     public ModelAndView peticionUsuariosEditar(Authentication aut, HttpServletRequest request) {
         String nif = request.getParameter("nif");
@@ -427,19 +493,20 @@ public class Controlador {
     @RequestMapping("admin/usuario/eliminar") // URL: http://localhost:8083/admin/usuario/eliminar
     public ModelAndView peticionUsuariosEliminar(Authentication aut, HttpServletRequest request){
         String nif = request.getParameter("nif");
+        // Busco el usuario en la base de datos
         Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
         ModelAndView mv = new ModelAndView();
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
-            // Eliminar las tareas del usuario de la base de datos
+            // Elimino las tareas del usuario de la base de datos
             List<Tarea> listaTareas = usuario.getTareas();
             for (Tarea tarea : listaTareas) {
                 tareas.borrar(tarea);
             }
             List<Role> rol = usuario.getRoles();
-            // Eliminar el rol de la base de datos
+            // Elimino el rol de la base de datos
             roles.borrarRole(rol.get(0));
-            // Eliminar el usuario de la base de datos
+            // Elimino el usuario de la base de datos
             usuarios.eliminarUsuario(usuario);
             mv.setViewName("redirect:/admin");
         }
@@ -456,11 +523,17 @@ public class Controlador {
             mv.addObject("user", "No se ha iniciado sesión");
         else{
             mv.addObject("user", aut.getName());
+            // Recupero el usuario
             String nif = request.getParameter("nif");
+            // Busco el usuario
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            // Creo un objeto usuario
             Usuario user = usuarioOpt.get();
+            // Añado el usuario a la vista
             mv.addObject("usuario", user);
+            // Recupero la lista de tareas del usuario
             List<Tarea> listaTareas = user.getTareas();
+            // Añado la lista de tareas a la vista
             mv.addObject("tareas", listaTareas);
         }
         mv.setViewName("listadotareasuser");
@@ -474,10 +547,15 @@ public class Controlador {
             mv.addObject("user", "No se ha iniciado sesión");
         else{
             mv.addObject("user", aut.getName());
+            // Recupero el usuario
             String nif = request.getParameter("nif");
+            // Busco el usuario
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            // Creo un objeto usuario
             Usuario user = usuarioOpt.get();
+            // Creo un objeto tarea
             Tarea t = new Tarea();
+            // Asigno el usuario a la tarea
             t.setUsuario(user);
             mv.addObject("tarea", t);
             mv.addObject("usuario", user);
@@ -496,11 +574,17 @@ public class Controlador {
         else{
             mv.addObject("user", aut.getName());
             String nif = request.getParameter("nif");
+            // Busco el usuario
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
+            // Creo un objeto usuario
             Usuario user = usuarioOpt.get();
+            // Recupero el id de la tarea
             int id = Integer.parseInt(request.getParameter("id"));
+            // Busco la tarea
             Optional<Tarea> tareaOpt = tareas.buscarTarea(id);
+            // Creo un objeto tarea
             Tarea tarea = tareaOpt.get();
+            // Añado el usuario y la tarea al modelo
             mv.addObject("usuario", user);
             mv.addObject("tarea", tarea);
             mv.setViewName("editartarea");

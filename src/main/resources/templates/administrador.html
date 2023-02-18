@@ -28,11 +28,18 @@
           <td th:text="${usuario.getNombre()}"></td>
           <td th:text="${usuario.getApellidos()}"></td>
           <td>
-            <ul>
-              <th:block th:each="tarea : ${usuario.getTareas()}">
-                <li th:text="${tarea.getNombre()} + ' - ' + ${tarea.getDescripcion()} + ' - ' + ${tarea.getEstado()}"></li>
-              </th:block>
-            </ul>
+              <ul>
+                  <th:block th:each="tarea : ${usuario.getTareas()}">
+                      <li>
+                          <span th:switch="${tarea.getEstado()}">
+                            <span th:case="1" th:text="${tarea.getNombre()} + ' - ' + ${tarea.getDescripcion()} + ' - Anulada'" th:style="'color:#D00000'"></span>
+                            <span th:case="2" th:text="${tarea.getNombre()} + ' - ' + ${tarea.getDescripcion()} + ' - Pendiente'" th:style="'color:#FF5D00'"></span>
+                            <span th:case="3" th:text="${tarea.getNombre()} + ' - ' + ${tarea.getDescripcion()} + ' - Completada'" th:style="'color:#0B5810'"></span>
+                          </span>
+                      </li>
+                  </th:block>
+              </ul>
+
           </td>
           <td>
             <button type="submit" class="btn btn-warning" name="nif" th:value="${usuario.getNif()}">Editar</button>

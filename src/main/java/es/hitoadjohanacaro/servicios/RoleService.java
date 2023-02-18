@@ -19,6 +19,7 @@ public class RoleService {
         roles.save(rol);
     }
 
+    // Método para borrar un rol
     public void borrarRole(Role rol) {
         roles.delete(rol);
     }

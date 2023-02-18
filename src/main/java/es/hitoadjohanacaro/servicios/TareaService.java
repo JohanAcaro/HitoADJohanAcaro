@@ -30,6 +30,7 @@ public class TareaService {
         return tareas.findByEstado(estado);
     }
 
+    // Método para calcular la media de las tareas por usuario
     public Double promedioTareas() {
         return tareas.promedio();
     }
