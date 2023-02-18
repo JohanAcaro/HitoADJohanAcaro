@@ -162,7 +162,7 @@ public class Controlador {
     }
 
     @RequestMapping("/user/tareas/listado") // URL: http://localhost:8083/usuario/tareas/listado
-    public ModelAndView peticionListdoTareas(Authentication aut) {
+    public ModelAndView peticionListadoTareas(Authentication aut) {
         ModelAndView mv = new ModelAndView();
         if(aut==null)
             mv.addObject("user", "No se ha iniciado sesión");
