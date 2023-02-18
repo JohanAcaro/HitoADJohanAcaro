@@ -8,5 +8,4 @@ public class HitoADJohanAcaroApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(HitoADJohanAcaroApplication.class, args);
 	}
-
 }

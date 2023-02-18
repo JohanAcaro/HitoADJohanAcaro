@@ -11,8 +11,8 @@
 	<groupId>es</groupId>
 	<artifactId>HitoADJohanAcaro</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>HitoIndividualADT2MarioLuquero</name>
-	<description>HitoIndividualADT2MarioLuquero</description>
+	<name>HitoADT2JohanAcaro</name>
+	<description>HitoADT2JohanAcaro</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

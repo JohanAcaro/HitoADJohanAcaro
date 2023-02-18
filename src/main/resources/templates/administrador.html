@@ -39,10 +39,10 @@
                       </li>
                   </th:block>
               </ul>
-
           </td>
           <td>
             <button type="submit" class="btn btn-warning" name="nif" th:value="${usuario.getNif()}">Editar</button>
+            <a th:if="${user}==11111111A" th:href="@{/admin/usuario/tareas/listado(nif=${usuario.getNif()})}" class="btn btn-secondary ml-2">Tareas</a>
             <a th:href="@{/admin/usuario/eliminar(nif=${usuario.getNif()})}" class="btn btn-danger">Eliminar</a>
           </td>
         </tr>

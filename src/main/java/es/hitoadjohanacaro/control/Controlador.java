@@ -174,7 +174,7 @@ public class Controlador {
             Optional<Usuario> usuarioOpt = usuarios.buscarUsuario(nif);
             // Recupero el usuario
             Usuario user = usuarioOpt.get();
-            // Asigno el usuario a la vista
+            // Asigno el usuario a la lista de tareas
             List<Tarea> listaTareas = user.getTareas();
             // Asigno la lista de tareas a la vista
             mv.addObject("tareas", listaTareas);
@@ -234,8 +234,9 @@ public class Controlador {
                 // Recupero el rol del usuario
                 List<Role> rol = userAut.getRoles();
                 if (rol.get(0).getRol().equals("ADMINISTRADOR")){
+                    mv.addObject("nif", nif);
                     // Redirigir a la página de listado de tareas del usuario elegido
-                    mv.setViewName("redirect:/admin/usuario/tareas/listado?nif=" + nif);
+                    mv.setViewName("redirect:/admin/usuario/tareas/listado");
                 }
                 else
                     // Redirigir a la página de listado de tareas del usuario autenticado
@@ -317,7 +318,6 @@ public class Controlador {
                 else
                     // Redirijo a la página de listado de tareas del usuario
                     mv.setViewName("redirect:/user/tareas/listado");
-
             } else {
                 mv.addObject("sms", "No se ha actualizado la tarea correctamente");
                 mv.setViewName("informa");

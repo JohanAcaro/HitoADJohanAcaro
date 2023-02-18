@@ -14,15 +14,15 @@
         <legend>Registro de una nueva tarea: </legend>
         <div class="form-group">
           <label for="nombre">Nombre:</label>
-          <input type="text" class="form-control" id="nombre" th:field="*{nombre}" />
+          <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required/>
         </div>
         <div class="form-group">
           <label for="descripcion">Descripcion:</label>
-          <input type="text" class="form-control" id="descripcion" th:field="*{descripcion}" />
+          <input type="text" class="form-control" id="descripcion" th:field="*{descripcion}" required/>
         </div>
         <div class="form-group">
-          <label for="estado">Estado (3 = Completada, 2 = Pendiente), 1 = Anulada:</label>
-          <input type="number" class="form-control" id="estado" min="1" max="3" th:field="*{estado}" />
+          <label for="estado">Estado (3 = Completada, 2 = Pendiente, 1 = Anulada): </label>
+          <input type="number" class="form-control" id="estado" min="1" max="3" th:field="*{estado}" required/>
         </div>
         <button type="submit" class="btn btn-primary">Guardar nueva tarea</button>
       </fieldset>
